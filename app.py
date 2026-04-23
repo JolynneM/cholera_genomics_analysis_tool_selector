@@ -237,7 +237,7 @@ def analyze(file_type, expertise, infrastructure, funding, sharing_pref, interne
         if sharing_pref == "Yes":
             candidates = [t for t in candidates if t["sharing"].lower().startswith("yes")]
         elif sharing_pref == "No":
-            candidates = [t for t in candidates if "no" in t["sharing"].lower()]
+            pass
 
     # 6. NEW: Filter Internet Access
     # If user says "No" to internet, exclude tools that require it.
