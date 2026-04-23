@@ -1,15 +1,14 @@
 import streamlit as st
 
-# --- 1. THE ENRICHED DATABASE (FIXED TEXT MATCHES) ---
-# Updated 'use_case' lists to EXACTLY match the UI selection options
+# --- 1. THE ENRICHED DATABASE (WITH INTERNET FIELD) ---
+# Added 'internet_required': True for web/cloud tools, False for local pipelines
 TOOLS = [
     {
         "name": "Pathogenwatch (Vibriowatch)", 
         "input": ["FASTA", "FASTQ"], 
         "Web browser": True, "Command line": False, 
-        "infra": ["Cloud computing"], 
+        "infra": ["Laptop", "Desktop", "Workstation"], 
         "cost": "Free", 
-        # FIXED: Changed "Transmission assessment" to "Transmission dynamics assessment"
         "use_case": ["Strain identification", "AMR assessment", "Transmission dynamics assessment"],
         "sharing": "Yes (can share collections)",
         "governance": "User-controlled sharing",
@@ -17,6 +16,7 @@ TOOLS = [
         "platform_type": "Platform",
         "developed_for": "Public health surveillance and genomic epidemiology",
         "interaction": "Integrated, fixed analysis pipeline (limited user control)",
+        "internet_required": True, # Requires internet
         "capabilities": {
             "Quality control": "No", "Assembly": "Yes", "Taxonomy assessment": "Yes", 
             "AMR profiling": "Yes", "Virulence genes profiling": "Yes", "Variant calling": "Yes",
@@ -27,9 +27,8 @@ TOOLS = [
         "name": "Terra", 
         "input": ["FASTA", "FASTQ"], 
         "Web browser": True, "Command line": True, 
-        "infra": ["Cloud computing"], 
+        "infra": ["Laptop", "Desktop", "Workstation"], 
         "cost": "Paid", 
-        # FIXED: Changed "Transmission assessment" and "Other analysis" to match UI
         "use_case": ["Strain identification", "AMR assessment", "Transmission dynamics assessment", "Other analyses"],
         "sharing": "Yes (can share workspaces)",
         "governance": "Controlled-access cloud environment",
@@ -37,6 +36,7 @@ TOOLS = [
         "platform_type": "Platform",
         "developed_for": "Scalable biomedical data analysis in the cloud",
         "interaction": "User selects and runs workflows/pipelines (high flexibility)",
+        "internet_required": True, # Requires internet
         "capabilities": {
             "Quality control": "Yes", "Assembly": "Yes", "Taxonomy assessment": "Yes", 
             "AMR profiling": "Yes", "Virulence genes profiling": "Yes", "Variant calling": "Yes",
@@ -47,9 +47,8 @@ TOOLS = [
         "name": "Galaxy", 
         "input": ["FASTQ", "FASTA"], 
         "Web browser": True, "Command line": True, 
-        "infra": ["Cloud computing", "Local computing (e.g laptops, desktops, or workstations using their own built-in compute resources)", "High-performance computing"], 
+        "infra": ["Laptop", "Desktop", "Workstation", "High-performance computing"], 
         "cost": "Free", 
-        # FIXED: Changed "Transmission assessment" to "Transmission dynamics assessment"
         "use_case": ["Strain identification", "AMR assessment", "Transmission dynamics assessment"],
         "sharing": "Yes (can share histories/workflows)",
         "governance": "Instance-dependent",
@@ -57,6 +56,7 @@ TOOLS = [
         "platform_type": "Platform",
         "developed_for": "Making bioinformatics accessible without coding",
         "interaction": "User builds or selects workflows from modular tools (GUI-based)",
+        "internet_required": True, # Requires internet (for public server)
         "capabilities": {
             "Quality control": "Yes", "Assembly": "Yes", "Taxonomy assessment": "Yes", 
             "AMR profiling": "Yes", "Virulence genes profiling": "Yes", "Variant calling": "Yes",
@@ -67,9 +67,8 @@ TOOLS = [
         "name": "DNAnexus", 
         "input": ["FASTQ", "FASTA"], 
         "Web browser": True, "Command line": True, 
-        "infra": ["Cloud computing"], 
+        "infra": ["Laptop", "Desktop", "Workstation"], 
         "cost": "Paid", 
-        # FIXED: Changed "Transmission assessment" and "Other analysis" to match UI
         "use_case": ["Strain identification", "AMR assessment", "Transmission dynamics assessment", "Other analyses"],
         "sharing": "Yes (can bring in people to collaborate)",
         "governance": "Enterprise-grade governance",
@@ -77,6 +76,7 @@ TOOLS = [
         "platform_type": "Platform",
         "developed_for": "Enterprise-scale, secure genomic data analysis",
         "interaction": "User selects and runs workflows/apps (cloud-executed pipelines)",
+        "internet_required": True, # Requires internet
         "capabilities": {
             "Quality control": "Yes", "Assembly": "Yes", "Taxonomy assessment": "Yes", 
             "AMR profiling": "Yes", "Virulence genes profiling": "Yes", "Variant calling": "Yes",
@@ -87,9 +87,8 @@ TOOLS = [
         "name": "Cholgen (Bacpage)", 
         "input": ["FASTA"], 
         "Web browser": False, "Command line": True, 
-        "infra": ["Cloud computing", "Local computing (e.g laptops, desktops, or workstations using their own built-in compute resources)", "High-performance computing"], 
+        "infra": ["Laptop", "Desktop", "Workstation", "High-performance computing"], 
         "cost": "Free", 
-        # Already correct
         "use_case": ["AMR assessment", "Transmission dynamics assessment"],
         "sharing": "Not applicable/No",
         "governance": "Data uploaded to external servers",
@@ -97,6 +96,7 @@ TOOLS = [
         "platform_type": "Pipeline",
         "developed_for": "Cholera-specific genomic analysis and typing",
         "interaction": "Pipeline",
+        "internet_required": False, # Can run offline once installed
         "capabilities": {
             "Quality control": "Yes", "Assembly": "Yes", "Taxonomy assessment": "No", 
             "AMR profiling": "Yes", "Virulence genes profiling": "No", "Variant calling": "Yes",
@@ -107,9 +107,8 @@ TOOLS = [
         "name": "Bagep", 
         "input": ["FASTQ"], 
         "Web browser": False, "Command line": True, 
-        "infra": ["Cloud computing", "Local computing (e.g laptops, desktops, or workstations using their own built-in compute resources)", "High-performance computing"], 
+        "infra": ["Laptop", "Desktop", "Workstation", "High-performance computing"], 
         "cost": "Free", 
-        # Already correct
         "use_case": ["AMR assessment", "Transmission dynamics assessment"],
         "sharing": "Not applicable/No",
         "governance": "Data handled entirely by user",
@@ -117,6 +116,7 @@ TOOLS = [
         "platform_type": "Pipeline",
         "developed_for": "Automated workflow for downstream analysis of bacterial genome sequences",
         "interaction": "Pipeline",
+        "internet_required": False, # Can run offline once installed
         "capabilities": {
             "Quality control": "Yes", "Assembly": "Yes", "Taxonomy assessment": "Yes", 
             "AMR profiling": "Yes", "Virulence genes profiling": "No", "Variant calling": "Yes",
@@ -127,9 +127,8 @@ TOOLS = [
         "name": "Bactopia", 
         "input": ["FASTQ"], 
         "Web browser": False, "Command line": True, 
-        "infra": ["Cloud computing", "Local computing (e.g laptops, desktops, or workstations using their own built-in compute resources)", "High-performance computing"], 
+        "infra": ["Laptop", "Desktop", "Workstation", "High-performance computing"], 
         "cost": "Free", 
-        # Already correct
         "use_case": ["AMR assessment"],
         "sharing": "Not applicable/No",
         "governance": "Data handled entirely by user",
@@ -137,6 +136,7 @@ TOOLS = [
         "platform_type": "Pipeline",
         "developed_for": "Standardised bacterial genome analysis workflows",
         "interaction": "Configurable pipeline",
+        "internet_required": False, # Can run offline once installed
         "capabilities": {
             "Quality control": "Yes", "Assembly": "Yes", "Taxonomy assessment": "Yes", 
             "AMR profiling": "Yes", "Virulence genes profiling": "Yes", "Variant calling": "Yes",
@@ -148,9 +148,8 @@ TOOLS = [
         "name": "IRIDA", 
         "input": ["FASTQ"], 
         "Web browser": True, "Command line": False, 
-        "infra": ["Cloud computing"], 
+        "infra": ["Laptop", "Desktop", "Workstation"], 
         "cost": "Free", 
-        # Already correct
         "use_case": ["Strain identification", "AMR assessment"],
         "sharing": "Yes (can share between instance)",
         "governance": "Data ownership remains with institution",
@@ -158,6 +157,7 @@ TOOLS = [
         "platform_type": "Platform",
         "developed_for": "Public health genomics data management and analysis",
         "interaction": "Platform with selectable, integrated pipelines (managed workflows)",
+        "internet_required": True, # Requires internet (web-based)
         "capabilities": {
             "Quality control": "No", "Assembly": "Yes", "Taxonomy assessment": "No", 
             "AMR profiling": "Yes", "Virulence genes profiling": "No", "Variant calling": "Yes",
@@ -168,9 +168,8 @@ TOOLS = [
         "name": "Centre for Genomic Epidemiology", 
         "input": ["FASTA", "FASTQ"], 
         "Web browser": True, "Command line": False, 
-        "infra": ["Cloud computing"], 
+        "infra": ["Laptop", "Desktop", "Workstation"], 
         "cost": "Free", 
-        # Already correct
         "use_case": ["Strain identification", "AMR assessment"],
         "sharing": "Not applicable/No",
         "governance": "Data uploaded to external servers",
@@ -178,6 +177,7 @@ TOOLS = [
         "platform_type": "Platform",
         "developed_for": "Easy access to typing and AMR prediction tools",
         "interaction": "Collection of specialised tools (not a single pipeline)",
+        "internet_required": True, # Requires internet
         "capabilities": {
             "Quality control": "No", "Assembly": "No", "Taxonomy assessment": "No", 
             "AMR profiling": "Yes", "Virulence genes profiling": "No", "Variant calling": "No",
@@ -188,9 +188,8 @@ TOOLS = [
         "name": "Choleraseq", 
         "input": ["FASTQ"], 
         "Web browser": False, "Command line": True, 
-        "infra": ["Cloud computing", "Local computing (e.g laptops, desktops, or workstations using their own built-in compute resources)", "High-performance computing"], 
+        "infra": ["Laptop", "Desktop", "Workstation", "High-performance computing"], 
         "cost": "Free", 
-        # Already correct
         "use_case": ["Transmission dynamics assessment"],
         "sharing": "Not applicable/No",
         "governance": "Data handled entirely by user",
@@ -198,6 +197,7 @@ TOOLS = [
         "platform_type": "Pipeline",
         "developed_for": "Cholera-specific genomic analysis pipeline",
         "interaction": "Pipeline",
+        "internet_required": False, # Can run offline once installed
         "capabilities": {
             "Quality control": "Yes", "Assembly": "Yes", "Taxonomy assessment": "No", 
             "AMR profiling": "No", "Virulence genes profiling": "No", "Variant calling": "Yes",
@@ -208,7 +208,7 @@ TOOLS = [
 ]
 
 # --- 2. THE LOGIC FUNCTION ---
-def analyze(file_type, expertise, infrastructure, funding, sharing_pref, required_goals):
+def analyze(file_type, expertise, infrastructure, funding, sharing_pref, internet_access, required_goals):
     candidates = []
     
     # 1. Filter Input
@@ -239,15 +239,19 @@ def analyze(file_type, expertise, infrastructure, funding, sharing_pref, require
         elif sharing_pref == "No":
             candidates = [t for t in candidates if "no" in t["sharing"].lower()]
 
-    # 6. STRICT FILTER FOR GOALS (MATCH ALL)
-    # Now that the text matches exactly, this will work correctly.
+    # 6. NEW: Filter Internet Access
+    # If user says "No" to internet, exclude tools that require it.
+    if internet_access == "No":
+        candidates = [t for t in candidates if not t["internet_required"]]
+    
+    # 7. STRICT FILTER FOR GOALS (MATCH ALL)
     if required_goals:
         candidates = [
             t for t in candidates 
             if all(goal in t["use_case"] for goal in required_goals)
         ]
 
-    # 7. Scoring
+    # 8. Scoring
     for t in candidates:
         t["score"] = 0
         if required_goals:
@@ -264,35 +268,38 @@ def analyze(file_type, expertise, infrastructure, funding, sharing_pref, require
 # --- 3. THE STREAMLIT UI ---
 st.set_page_config(page_title="Bio Tool Selector", page_icon="🧬")
 st.title("Simple decision support framework for cholera genomics analysis tool selection")
-st.markdown("Select your constraints to find the best platform.")
+st.markdown("Select aspects available to you to help you select a suitable platform for data analysis.")
 
 col1, col2 = st.columns(2)
 with col1:
-    file_type = st.selectbox("Input File", ["FASTA", "FASTQ", "Either"])
-    expertise = st.selectbox("Expertise", ["Web browser", "Command line", "Either"])
+    file_type = st.selectbox("What input file do you have?", ["FASTA", "FASTQ", "Either"])
+    expertise = st.selectbox("How do you prefer to carry out your analysis?", ["Web browser", "Command line", "Either"])
 with col2:
-    infrastructure = st.selectbox("Infrastructure", ["Cloud computing", "Local computing (e.g laptops, desktops, or workstations using their own built-in compute resources)", "High-performance computing", "Any"])
-    funding = st.selectbox("Funding Access", ["Yes", "No"])
+    infrastructure = st.selectbox("What infrastructure is available to you?", ["Laptop", "Desktop", "Workstation", "High-performance computing","Any"])
+    funding = st.selectbox("Do you have access to funding to support computing?", ["Yes", "No"])
+
+# NEW: Internet Access Filter
+internet_access = st.selectbox("Do you have internet access during analysis?", ["Yes", "No"])
 
 # Data Sharing Filter
-sharing_pref = st.selectbox("Data Sharing Requirement", ["Any", "Yes", "No"])
+sharing_pref = st.selectbox("Would you need to share your data or collaborate with someone else in your analysis?", ["Any", "Yes", "No"])
 
 # UI Options (These MUST match the database exactly)
-available_goals = ["Strain identification", "AMR assessment", "Transmission dynamics assessment", "Other analyses"]
-selected_goals = st.multiselect("Use case", available_goals, default=[])
+available_goals = ["Strain identification", "AMR assessment", "Transmission dynamics assessment"]
+selected_goals = st.multiselect("What type of analysis do you want to do?", available_goals, default=[])
 
 if st.button("Find Recommendations", type="primary"):
     with st.spinner("Analyzing tools..."):
-        results = analyze(file_type, expertise, infrastructure, funding, sharing_pref, selected_goals)
+        results = analyze(file_type, expertise, infrastructure, funding, sharing_pref, internet_access, selected_goals)
     
     if not results:
-        st.error("No matching tools found. Try relaxing your constraints (e.g., remove a goal or change infrastructure).")
+        st.error("No matching tools found. Try relaxing your constraints (e.g., remove a goal, change infrastructure, or allow internet access).")
     else:
-        st.success(f"Found {len(results)} recommendations that meet ALL your selected criteria!")
+        st.success(f"Found {len(results)} recommendations that meet your selected criteria!")
         
         for i, tool in enumerate(results, 1):
             is_top = (i == 1)
-            with st.expander(f"{'Top Pick' if is_top else 'Alternative'}: {tool['name']}", expanded=is_top):
+            with st.expander(f"{'Pick' if is_top else 'Alternative'}: {tool['name']}", expanded=is_top):
                 st.markdown(f"**Best for:** {', '.join(tool['use_case'])}")
                 st.markdown(f"**Developed for:** {tool['developed_for']}")
                 st.markdown(f"**Type:** {tool['platform_type']}")
@@ -312,6 +319,9 @@ if st.button("Find Recommendations", type="primary"):
                     interface_text = "Unknown"
                     
                 st.markdown(f"**Interface:** {interface_text}")
+                
+                # NEW: Display Internet Requirement
+                st.markdown(f"**Internet Required:** {'Yes' if tool['internet_required'] else 'No (Can run offline, although internet access may still be needed initially for installation, updates, or database downloads)'}")
                 
                 st.markdown("---")
                 st.markdown("**Data Governance & Sharing:**")
